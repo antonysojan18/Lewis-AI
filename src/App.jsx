@@ -7,6 +7,7 @@ import ArtifactsCanvas from './components/ArtifactsCanvas';
 import ArenaContainer from './components/ArenaContainer';
 import ModelSelectorModal from './components/ModelSelectorModal';
 import SettingsModal from './components/SettingsModal';
+import LewisVoiceFrame from './components/LewisVoiceFrame';
 import { DEFAULT_MODEL_ID, updateDynamicModels, getModelById } from './models/nvidiaModels';
 
 const DEFAULT_SYSTEM_PROMPT = 'You are Lewis, a sharp, focused, and adaptable AI collaborator powered by NVIDIA NIM, OmniRoute, Groq, and OpenRouter foundation models. Provide clear, accurate answers, format code in proper markdown, and use precision and clarity.';
@@ -509,93 +510,95 @@ export default function App() {
   };
 
   return (
-    <main className={`lewis-shell mode-${activeWorkspaceMode} ${intro ? 'intro-mode' : 'intro-settled'} ${isCanvasOpen ? 'canvas-active' : ''}`}>
-      <div className="aurora aurora-one" />
-      <div className="aurora aurora-two" />
-      <div className="grid-noise" />
+    <LewisVoiceFrame>
+      <main className={`lewis-shell mode-${activeWorkspaceMode} ${intro ? 'intro-mode' : 'intro-settled'} ${isCanvasOpen ? 'canvas-active' : ''}`}>
+        <div className="aurora aurora-one" />
+        <div className="aurora aurora-two" />
+        <div className="grid-noise" />
 
-      {/* Top Navigation */}
-      <Header
-        onOpenSettings={() => setIsSettingsModalOpen(true)}
-        isSidebarOpen={isSidebarOpen}
-        onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
-        isArenaMode={isArenaMode}
-        onToggleArena={() => setIsArenaMode(prev => !prev)}
-      />
-
-      <div className="workspace">
-        {/* Session Sidebar */}
-        <Sidebar
-          isOpen={isSidebarOpen}
-          sessions={sessions}
-          activeSessionId={activeSessionId}
-          onSelectSession={handleSelectSession}
-          onNewChat={handleNewChat}
-          onDeleteSession={handleDeleteSession}
-          onRenameSession={handleRenameSession}
-          onCloseSidebar={() => setIsSidebarOpen(false)}
+        {/* Top Navigation */}
+        <Header
+          onOpenSettings={() => setIsSettingsModalOpen(true)}
+          isSidebarOpen={isSidebarOpen}
+          onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
+          isArenaMode={isArenaMode}
+          onToggleArena={() => setIsArenaMode(prev => !prev)}
         />
 
-        {/* Split Model Arena (Duel Mode) OR Main Chat Canvas */}
-        {isArenaMode ? (
-          <ArenaContainer
-            onSelectWinner={handleSelectArenaWinner}
-            isCaveman={isCaveman}
-            onToggleCaveman={() => setIsCaveman(prev => !prev)}
-            onOpenModelSelector={handleOpenModelSelector}
-            onOpenArtifact={handleOpenArtifact}
+        <div className="workspace">
+          {/* Session Sidebar */}
+          <Sidebar
+            isOpen={isSidebarOpen}
+            sessions={sessions}
+            activeSessionId={activeSessionId}
+            onSelectSession={handleSelectSession}
+            onNewChat={handleNewChat}
+            onDeleteSession={handleDeleteSession}
+            onRenameSession={handleRenameSession}
+            onCloseSidebar={() => setIsSidebarOpen(false)}
           />
-        ) : (
-          <ChatContainer
-            messages={currentMessages}
-            onSelectPrompt={(promptText) => handleSendMessage(promptText, 'chat')}
-            onRegenerate={handleRegenerate}
-            onOpenArtifact={handleOpenArtifact}
-            isStreaming={isStreaming}
-            input={input}
-            setInput={setInput}
-            onSend={(text, mode) => handleSendMessage(text, mode)}
-            onStopStreaming={handleStopStreaming}
-            activeModelId={activeModelId}
-            activeWorkspaceMode={activeWorkspaceMode}
-            onChangeWorkspaceMode={(mode) => setActiveWorkspaceMode(mode)}
-            onOpenModelSelector={handleOpenModelSelector}
-            onSelectModel={handleSelectModel}
-            isCaveman={isCaveman}
-            onToggleCaveman={() => setIsCaveman(prev => !prev)}
-            isIntro={intro}
-          />
-        )}
 
-        {/* Interactive Artifacts & Live Preview Canvas Pane */}
-        <ArtifactsCanvas
-          isOpen={isCanvasOpen}
-          onClose={() => setIsCanvasOpen(false)}
-          artifact={activeArtifact}
+          {/* Split Model Arena (Duel Mode) OR Main Chat Canvas */}
+          {isArenaMode ? (
+            <ArenaContainer
+              onSelectWinner={handleSelectArenaWinner}
+              isCaveman={isCaveman}
+              onToggleCaveman={() => setIsCaveman(prev => !prev)}
+              onOpenModelSelector={handleOpenModelSelector}
+              onOpenArtifact={handleOpenArtifact}
+            />
+          ) : (
+            <ChatContainer
+              messages={currentMessages}
+              onSelectPrompt={(promptText) => handleSendMessage(promptText, 'chat')}
+              onRegenerate={handleRegenerate}
+              onOpenArtifact={handleOpenArtifact}
+              isStreaming={isStreaming}
+              input={input}
+              setInput={setInput}
+              onSend={(text, mode) => handleSendMessage(text, mode)}
+              onStopStreaming={handleStopStreaming}
+              activeModelId={activeModelId}
+              activeWorkspaceMode={activeWorkspaceMode}
+              onChangeWorkspaceMode={(mode) => setActiveWorkspaceMode(mode)}
+              onOpenModelSelector={handleOpenModelSelector}
+              onSelectModel={handleSelectModel}
+              isCaveman={isCaveman}
+              onToggleCaveman={() => setIsCaveman(prev => !prev)}
+              isIntro={intro}
+            />
+          )}
+
+          {/* Interactive Artifacts & Live Preview Canvas Pane */}
+          <ArtifactsCanvas
+            isOpen={isCanvasOpen}
+            onClose={() => setIsCanvasOpen(false)}
+            artifact={activeArtifact}
+          />
+        </div>
+
+        {/* Model Selector Modal */}
+        <ModelSelectorModal
+          isOpen={isModelModalOpen}
+          onClose={() => setIsModelModalOpen(false)}
+          activeModelId={activeModelId}
+          onSelectModel={handleSelectModel}
+          initialCategory={initialModalCategory}
         />
-      </div>
 
-      {/* Model Selector Modal */}
-      <ModelSelectorModal
-        isOpen={isModelModalOpen}
-        onClose={() => setIsModelModalOpen(false)}
-        activeModelId={activeModelId}
-        onSelectModel={handleSelectModel}
-        initialCategory={initialModalCategory}
-      />
-
-      {/* Settings Modal */}
-      <SettingsModal
-        isOpen={isSettingsModalOpen}
-        onClose={() => setIsSettingsModalOpen(false)}
-        temperature={temperature}
-        setTemperature={setTemperature}
-        maxTokens={maxTokens}
-        setMaxTokens={setMaxTokens}
-        systemPrompt={systemPrompt}
-        setSystemPrompt={setSystemPrompt}
-        onClearAllSessions={handleClearAllSessions}
-      />
-    </main>
+        {/* Settings Modal */}
+        <SettingsModal
+          isOpen={isSettingsModalOpen}
+          onClose={() => setIsSettingsModalOpen(false)}
+          temperature={temperature}
+          setTemperature={setTemperature}
+          maxTokens={maxTokens}
+          setMaxTokens={setMaxTokens}
+          systemPrompt={systemPrompt}
+          setSystemPrompt={setSystemPrompt}
+          onClearAllSessions={handleClearAllSessions}
+        />
+      </main>
+    </LewisVoiceFrame>
   );
 }
