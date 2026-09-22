@@ -24,7 +24,10 @@ export default function Header({
         >
           <Menu />
         </button>
-        <span className="brand-name">LEWIS</span>
+        <div className="brand-title-wrap">
+          <span className="brand-name">LEWIS</span>
+          <span className="brand-byline">Powered By Tony</span>
+        </div>
       </div>
 
       <div className="top-actions">

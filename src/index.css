@@ -163,6 +163,12 @@ button {
   gap: 12px;
 }
 
+.brand-title-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
 .brand-name {
   font-family: var(--font-display);
   font-size: 15px;
@@ -172,6 +178,16 @@ button {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
+}
+
+.brand-byline {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #edb750;
+  opacity: 0.9;
+  text-transform: uppercase;
 }
 
 .connected-pill {
