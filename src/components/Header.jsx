@@ -25,8 +25,11 @@ export default function Header({
           <Menu />
         </button>
         <div className="brand-title-wrap">
-          <span className="brand-name">LEWIS</span>
-          <span className="brand-byline">Powered By Tony</span>
+          <img src="/Lion.ico" alt="Lion Logo" className="brand-logo-img" />
+          <div className="brand-text-col">
+            <span className="brand-name">LEWIS</span>
+            <span className="brand-byline">Powered By Tony</span>
+          </div>
         </div>
       </div>
 

@@ -165,14 +165,33 @@ button {
 
 .brand-title-wrap {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 7px;
+  filter: drop-shadow(0 2px 8px rgba(237, 183, 80, 0.35));
+  transition: transform 0.25s ease;
+}
+.brand-title-wrap:hover .brand-logo-img {
+  transform: scale(1.08) rotate(3deg);
+}
+
+.brand-text-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 
 .brand-name {
   font-family: var(--font-display);
   font-size: 15px;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.24em;
+  line-height: 1.1;
   font-weight: 800;
   background: var(--titanium-text);
   -webkit-background-clip: text;
@@ -182,7 +201,8 @@ button {
 
 .brand-byline {
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 9px;
+  line-height: 1.1;
   font-weight: 600;
   letter-spacing: 0.08em;
   color: #edb750;
