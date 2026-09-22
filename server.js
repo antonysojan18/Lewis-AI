@@ -3,7 +3,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { exec } from 'child_process';
+import util from 'util';
 import OpenAI from 'openai';
+
+const execPromise = util.promisify(exec);
 
 dotenv.config();
 
@@ -571,6 +575,27 @@ app.post('/api/enhance-prompt', async (req, res) => {
   } catch (err) {
     console.warn('Prompt enhancement fallback:', err.message);
     return res.json({ enhanced: req.body.prompt || '' });
+  }
+});
+
+// Lewis OS Engine System Automation Endpoint
+app.post('/api/system', async (req, res) => {
+  try {
+    const { prompt } = req.body;
+    if (!prompt || !prompt.trim()) {
+      return res.status(400).json({ error: 'Prompt is required.' });
+    }
+
+    // Call Python OS engine
+    const escapedPrompt = prompt.replace(/"/g, '\\"');
+    const { stdout, stderr } = await execPromise(
+      `python -c "import lewis_os_engine; print(lewis_os_engine.execute_jarvis_task('''${escapedPrompt}'''))"`
+    );
+
+    return res.json({ result: stdout.trim() || stderr || 'Task executed successfully.' });
+  } catch (error) {
+    console.error('System execution error:', error);
+    return res.status(500).json({ error: error.message });
   }
 });
 
